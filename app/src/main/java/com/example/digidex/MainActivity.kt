@@ -19,18 +19,20 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import androidx.navigation.navArgument
+import com.example.digidex.ui.screens.DigimonDetailsScreen
 import com.example.digidex.ui.screens.DigimonListScreen
 import com.example.digidex.ui.theme.DigidexTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DigimonDetails(val name: String)
+data class DigimonDetailScreen(val id: Int)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -75,12 +77,17 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("digimon_list") {
                             DigimonListScreen {
-                                navController.navigate(route = DigimonDetails(it.name))
+                                navController.navigate("digimon_details/${it.id}")
                             }
                         }
-                        composable<DigimonDetails> { backStackEntry ->
-                            val details: DigimonDetails = backStackEntry.toRoute()
-                            Text(text = details.name)
+                        composable(
+                            "digimon_details/{id}",
+                            arguments = listOf(navArgument("id") {
+                                type = NavType.IntType
+                            })
+                        ) { backStackEntry ->
+                            val id = backStackEntry.arguments?.getInt("id") ?: 1
+                            DigimonDetailsScreen(id = id)
                         }
                     }
                 }

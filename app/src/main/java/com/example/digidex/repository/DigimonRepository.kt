@@ -1,6 +1,7 @@
 package com.example.digidex.repository
 
 import com.example.digidex.network.DigiApiService
+import com.example.digidex.network.model.DigimonDetails
 import com.example.digidex.network.model.DigimonListPage
 import javax.inject.Inject
 
@@ -12,5 +13,9 @@ class DigimonRepository @Inject constructor(private val digiApiService: DigiApiS
             pageNumber = pageNumber,
             pageSize = PAGE_SIZE
         ).body()
+    }
+
+    suspend fun getDigimonDetails(id: Int): DigimonDetails? {
+        return digiApiService.getDigimonDetails(id = id).body()
     }
 }
