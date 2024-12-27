@@ -8,8 +8,7 @@ Pokedex for digimon
 - [ ] List all digimon
     - [x] List first page(basic)
     - [ ] Introduce paging
-    - [ ] List complete screen
-- [ ] Update list ui
-- [ ] Digimon detail screen
+- [x] Update list ui
+- [ ] Digimon detail screen(basic)
 - [ ] Update digimon detail screen
 - [ ] More?

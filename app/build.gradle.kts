@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.moshi.kotlin)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.compose)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

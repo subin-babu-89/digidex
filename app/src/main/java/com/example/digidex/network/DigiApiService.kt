@@ -7,5 +7,8 @@ import retrofit2.http.Query
 
 interface DigiApiService {
     @GET("digimon")
-    suspend fun getDigimonList(@Query("pageNumber") pageNumber: Int): Response<DigimonListPage>
+    suspend fun getDigimonList(
+        @Query("page") pageNumber: Int,
+        @Query("pageSize") pageSize: Int,
+    ): Response<DigimonListPage>
 }
