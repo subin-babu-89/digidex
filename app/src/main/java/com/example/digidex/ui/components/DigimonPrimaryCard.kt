@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
@@ -31,7 +34,11 @@ fun DigimonPrimaryCard(
     types: List<DigimonDetails.Types>,
     fields: List<DigimonDetails.Fields>,
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Text(text = "$id")
         Text(
             text = name,
@@ -41,7 +48,10 @@ fun DigimonPrimaryCard(
             model = imageUrl[0].href,
             contentDescription = "digimon-image",
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(shape = RoundedCornerShape(8.dp))
         )
         Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
             PrimaryCardPropertyStack(title = "Level", dataPoints = levels.map { it.level })
@@ -62,6 +72,7 @@ fun DigimonPrimaryCard(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

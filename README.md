@@ -10,5 +10,5 @@ Pokedex for digimon
     - [ ] Introduce paging
 - [x] Update list ui
 - [x] Digimon detail screen(basic)
-- [ ] Update digimon detail screen
+- [x] Update digimon detail screen
 - [ ] More?

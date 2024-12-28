@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
@@ -38,7 +39,7 @@ fun AdditionalPageInfo(
     Column(modifier = modifier) {
         AttributeDisplay(
             label = "Release date",
-            value = releaseData
+            value = releaseData, modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         TabRow(selectedTabIndex = selectedTabIndex, Modifier.fillMaxWidth()) {
@@ -48,7 +49,10 @@ fun AdditionalPageInfo(
                         pagerState.animateScrollToPage(index)
                     }
                 }) {
-                    Text(text = description.language)
+                    Text(
+                        text = description.forDisplay,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
                 }
             }
         }
@@ -62,7 +66,21 @@ fun AdditionalPageInfo(
     }
 }
 
-@Preview(showBackground = true, )
+private val DigimonDetails.Descriptions.forDisplay
+    get() = when (language) {
+        "jap" -> countryFlag("jp")
+        "en_us" -> countryFlag("us")
+        else -> "Unknown"
+    }
+
+fun countryFlag(code: String) = code
+    .uppercase()
+    .split("")
+    .filter { it.isNotBlank() }
+    .map { it.codePointAt(0) + 0x1F1A5 }
+    .joinToString("") { String(Character.toChars(it)) }
+
+@Preview(showBackground = true)
 @Composable
 private fun AdditionalPageInfoPreview() {
     AdditionalPageInfo(

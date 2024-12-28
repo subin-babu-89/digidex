@@ -87,7 +87,9 @@ class MainActivity : ComponentActivity() {
                             })
                         ) { backStackEntry ->
                             val id = backStackEntry.arguments?.getInt("id") ?: 1
-                            DigimonDetailsScreen(id = id)
+                            DigimonDetailsScreen(id = id) { clickedId ->
+                                navController.navigate("digimon_details/$clickedId")
+                            }
                         }
                     }
                 }
