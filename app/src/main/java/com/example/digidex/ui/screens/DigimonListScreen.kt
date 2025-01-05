@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -29,12 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.digidex.network.model.DigimonListPage
 import com.example.digidex.ui.components.LoadingState
 import com.example.digidex.viewmodels.DigimonListViewModel
-import com.example.digidex.viewmodels.DigimonListViewState
 
 @Composable
 fun DigimonListScreen(
@@ -42,34 +40,24 @@ fun DigimonListScreen(
     viewModel: DigimonListViewModel = hiltViewModel(),
     onClick: (DigimonListPage.DigimonListItem) -> Unit,
 ) {
-    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val viewState: LazyPagingItems<DigimonListPage.DigimonListItem> =
+        viewModel.viewState.collectAsLazyPagingItems()
     LaunchedEffect(Unit) {
         viewModel.getDigimonList()
     }
-    when (val state = viewState) {
-        is DigimonListViewState.Error -> {
-            Text(modifier = Modifier.fillMaxWidth(), text = "Error: ${state.message}")
-        }
 
-        DigimonListViewState.Loading -> {
-            LoadingState(modifier = Modifier.fillMaxSize())
-        }
-
-        is DigimonListViewState.Success -> {
-            DigimonList(
-                digimons = state.digimonList,
-                modifier = modifier,
-            ) {
-                onClick(it)
-            }
-        }
+    DigimonList(
+        modifier = modifier,
+        digimons = viewState
+    ) {
+        onClick(it)
     }
 }
 
 @Composable
 fun DigimonList(
     modifier: Modifier = Modifier,
-    digimons: List<DigimonListPage.DigimonListItem>,
+    digimons: LazyPagingItems<DigimonListPage.DigimonListItem>,
     onClick: (DigimonListPage.DigimonListItem) -> Unit,
 ) {
     val scrollState: LazyListState = rememberLazyListState()
@@ -79,9 +67,37 @@ fun DigimonList(
         state = scrollState,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(items = digimons, key = { it.hashCode() }) {
-            DigimonListItem(digimon = it, modifier = Modifier.fillMaxWidth()) {
-                onClick(it)
+        items(count = digimons.itemCount) {
+            DigimonListItem(digimon = digimons[it]!!, modifier = Modifier.fillMaxWidth()) {
+                onClick(digimons[it]!!)
+            }
+        }
+
+        digimons.apply {
+            when (val refreshState = loadState.refresh) {
+                is LoadState.Error -> item {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Error: ${refreshState.error.message}"
+                    )
+                }
+
+                LoadState.Loading -> item { LoadingState(modifier = Modifier.fillMaxWidth()) }
+                is LoadState.NotLoading -> {}
+            }
+
+            when (val appendState = loadState.append) {
+                is LoadState.Error -> item {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Error: ${appendState.error.message}"
+                    )
+                }
+
+                LoadState.Loading -> item { LoadingState(modifier = Modifier.fillMaxWidth()) }
+                is LoadState.NotLoading -> {
+
+                }
             }
         }
     }
@@ -132,5 +148,5 @@ private fun DigimonListItemPreview() {
             href = "https://digi-api.com/api/v1/digimon/1",
             image = "https://digi-api.com/images/digimon/w/Agumon.png"
         )
-    ){}
+    ) {}
 }

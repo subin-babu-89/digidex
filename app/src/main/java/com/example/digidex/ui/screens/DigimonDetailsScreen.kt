@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.digidex.network.model.DigimonDetails
-import com.example.digidex.ui.components.AdditionalDetailsPage
 import com.example.digidex.ui.components.AdditionalPageEvolutions
 import com.example.digidex.ui.components.AdditionalPageInfo
 import com.example.digidex.ui.components.AdditionalPageSkills
@@ -31,6 +30,10 @@ import com.example.digidex.ui.components.LoadingState
 import com.example.digidex.viewmodels.DigimonDetailsScreenState
 import com.example.digidex.viewmodels.DigimonDetailsScreenViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AdditionalDetailsPage(val title: String, val content: @Composable () -> Unit)
 
 @Composable
 fun DigimonDetailsScreen(

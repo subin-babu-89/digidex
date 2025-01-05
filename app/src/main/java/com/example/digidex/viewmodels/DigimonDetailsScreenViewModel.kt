@@ -33,5 +33,4 @@ sealed class DigimonDetailsScreenState {
     data object Loading : DigimonDetailsScreenState()
     data class Error(val message: String) : DigimonDetailsScreenState()
     data class Success(val digimonDetails: DigimonDetails) : DigimonDetailsScreenState()
-
 }

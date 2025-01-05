@@ -5,9 +5,9 @@ Pokedex for digimon
 ### TODO
 
 - [x] Initial push
-- [ ] List all digimon
+- [x] List all digimon
     - [x] List first page(basic)
-    - [ ] Introduce paging
+    - [x] Introduce paging
 - [x] Update list ui
 - [x] Digimon detail screen(basic)
 - [x] Update digimon detail screen

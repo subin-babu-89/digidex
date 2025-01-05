@@ -36,5 +36,11 @@ data class DigimonListPage(
         val previousPage: String,
         @SerialName("nextPage")
         val nextPage: String,
-    )
+    ) {
+        val getNextPageToken: Int?
+            get() = nextPage.split("page=").last().firstOrNull()?.digitToIntOrNull()
+
+        val getPreviousPageToken: Int?
+            get() = previousPage.split("page=").last().firstOrNull()?.digitToIntOrNull()
+    }
 }
